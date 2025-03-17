@@ -1,20 +1,28 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
-const { JWT_SECRET } = require('../config');
+const User = require('../models/users');
+// const { JWT_SECRET } = require('../config');
 const router = express.Router();
+
 const authenticate = require('../middlewares/authenticate');
 // Signup
+// router.post('/signup', async (req, res) => {
+//   const { name, email, password, role } = req.body;
+//   try {
+//     const user = new User({ name, email, password, role });
+//     await user.save();
+//     res.status(201).send({ message: 'User created successfully' });
+//   } catch (err) {
+//     res.status(400).send({ error: 'User creation failed' });
+//   }
+// });
+
 router.post('/signup', async (req, res) => {
   const { name, email, password, role } = req.body;
-  try {
-    const user = new User({ name, email, password, role });
-    await user.save();
-    res.status(201).send({ message: 'User created successfully' });
-  } catch (err) {
-    res.status(400).send({ error: 'User creation failed' });
-  }
+
+  // Validate input data
+ 
 });
 
 // Login
@@ -27,7 +35,7 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).send({ error: 'Invalid credentials' });
     
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.send({ token });
   } catch (err) {
     res.status(500).send({ error: 'Login failed' });
@@ -87,6 +95,7 @@ router.post('/book', authenticate, async (req, res) => {
     }
   });
   const Joi = require('joi');
+const patient = require('../models/patient');
 
 
   // Joi Schema for Signup
@@ -102,9 +111,26 @@ router.post('/book', authenticate, async (req, res) => {
     if (error) return res.status(400).send({ error: error.details[0].message });
   
     const { name, email, password, role } = req.body;
+    
     try {
-      const user = new User({ name, email, password, role });
-      await user.save();
+      if(role==='patient'){
+        const user = new patient({
+           name,
+           email,
+           password: hashedPassword,
+           role
+         });
+         await user.save();
+       }else{
+         const user = new User({
+           name,
+           email,
+           password: hashedPassword,
+           role
+         });
+         await user.save();
+       }
+     
       res.status(201).send({ message: 'User created successfully' });
     } catch (err) {
       res.status(400).send({ error: 'User creation failed' });

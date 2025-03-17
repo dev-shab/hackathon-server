@@ -1,8 +1,11 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const Appointment = require('../models/Appointment');
+const Appointment = require('../models/appointments');
 const router = express.Router();
-
+const Joi = require('joi');
+const User = require('../models/users');
+const bcrypt = require('bcrypt');
+const { JWT_SECRET } = require('../config');
 // Middleware to verify JWT
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization;
@@ -41,40 +44,7 @@ router.get('/provider', authenticate, async (req, res) => {
   }
 });
 
-// Joi schema for updating appointment status
-const updateAppointmentSchema = Joi.object({
-    appointmentId: Joi.string().required(),
-    status: Joi.string().valid('pending', 'confirmed', 'canceled').required()
-  });
-  
-  // Update Appointment Status API
-  router.patch('/update', authenticate, async (req, res) => {
-    const { error } = updateAppointmentSchema.validate(req.body);
-    if (error) return res.status(400).send({ error: error.details[0].message });
-  
-    const { appointmentId, status } = req.body;
-  
-    if (req.user.role !== 'provider') {
-      return res.status(403).send({ error: 'Access forbidden' });
-    }
-  
-    try {
-      const appointment = await Appointment.findById(appointmentId);
-      if (!appointment || appointment.providerId.toString() !== req.user.id) {
-        return res.status(404).send({ error: 'Appointment not found' });
-      }
-  
-      appointment.status = status;
-      await appointment.save();
-      res.send({ message: 'Appointment updated successfully', appointment });
-    } catch (err) {
-      res.status(500).send({ error: 'Failed to update appointment' });
-    }
-  });
-  
-  const Appointment = require('../models/Appointment');
 
-// Joi schema for booking an appointment
 const bookAppointmentSchema = Joi.object({
   providerId: Joi.string().required(),
   date: Joi.date().required() // ISO date format
@@ -132,12 +102,9 @@ const loginSchema = Joi.object({
     }
   });
   
-  const Joi = require('joi');
-const express = require('express');
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const { JWT_SECRET } = require('../config');
+
+
+
 
 // Joi schema for signup
 const signupSchema = Joi.object({
