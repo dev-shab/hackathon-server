@@ -24,7 +24,7 @@ router.get('/getAppointments',authenticate, async (req, res) => {
   
     try {
       const appointments = await Appointment.find({ providerId: req.user.id })
-        .populate('patientId', 'name email') // Fetch patient details
+        .populate('patientId', 'name email') 
         .sort('date');
       res.send(appointments);
     } catch (err) {

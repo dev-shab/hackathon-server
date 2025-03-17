@@ -7,7 +7,6 @@ const Provider = require('../models/users');
 
 const router = express.Router();
 
-// Register a patient or provider
 router.post('/register', async (req, res) => {
   const { name, email, password, dateOfBirth, gender, role } = req.body;
 

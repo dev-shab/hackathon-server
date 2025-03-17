@@ -77,7 +77,6 @@ const updateAppointmentSchema = Joi.object({
 
 
 
-// Get Patient Vitals
 router.get('/vitals', authenticate, async (req, res) => {
   try {
     const patient = await Patient.findById(req.user.id);
@@ -88,7 +87,6 @@ router.get('/vitals', authenticate, async (req, res) => {
   }
 });
 
-// Get Patient Medical History
 router.get('/medical-history', authenticate, async (req, res) => {
   try {
     const patient = await Patient.findById(req.user._id);
@@ -99,7 +97,6 @@ router.get('/medical-history', authenticate, async (req, res) => {
   }
 });
 
-// Update Patient Vitals (for the provider)
 router.put('/vitals', authenticate, async (req, res) => {
     const { error } = vitalsSchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -117,7 +114,6 @@ router.put('/vitals', authenticate, async (req, res) => {
     }
   });
   
-  // Update Patient Medical History (for the provider)
   router.put('/medical-history', authenticate, async (req, res) => {
     const { error } = medicalHistorySchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);

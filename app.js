@@ -11,22 +11,17 @@ const cors = require('cors');
  dotenv.config();
 const app = express();
 app.use(helmet());
-app.use(cors()); // Enable CORS
+app.use(cors()); 
 
 app.use(bodyParser.json());
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('Database connection error:', err));
 
-// Routes
-// app.use('/auth', require('./routes/auth'));
-// app.use('/auth', require('./routes/patientRoutes'));
-// app.use('/appointment', require('./routes/routes'));
-app.use('/api/auth', authRoutes); // Auth routes for registration and login
-app.use('/api/patient', patientRoutes); // Patient-related routes
+
+app.use('/api/auth', authRoutes); 
+app.use('/api/patient', patientRoutes); 
 app.use('/api/provider', providerRoutes);
 
-// Start server
 app.listen(8090, () => console.log('Server running on port 8090'));
