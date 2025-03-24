@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login a patient or provider
+
 router.post('/login', async (req, res) => {
   const { email, password, role } = req.body;
 

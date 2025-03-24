@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const dotenv=require("dotenv")
-const patientRoutes = require('./routes/patientRoutes');
-const providerRoutes = require('./routes/providerRoutes');
-const authRoutes = require('./routes/authRoutes');
+const patientRoutes = require('./Routes/patientRoutes');
+const providerRoutes = require('./Routes/providerRoutes');
+const authRoutes = require('./Routes/authRoutes');
 const cors = require('cors');
  
  dotenv.config();
@@ -15,7 +15,7 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('Database connection error:', err));
 

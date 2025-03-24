@@ -11,24 +11,21 @@ const router = express.Router();
 
 
 const authenticate = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');  // Extract token from the Authorization header
+  const token = req.header('Authorization')?.replace('Bearer ', ''); 
   
   if (!token) {
     return res.status(401).send('Access Denied: No token provided');
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token using your secret
-    req.user = decoded;  // Attach the decoded token (user information) to req.user
-    next();  // Proceed to the next middleware or route handler
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+    req.user = decoded;  
+    next();
   } catch (err) {
     return res.status(403).send('Invalid or expired token');
   }
 };
 
-
-
-// Book an appointment
 router.post('/bookAppointment', authenticate, async (req, res) => {
   const { providerId, date } = req.body;
 console.log("I am here========>",req.user)
@@ -49,7 +46,6 @@ const updateAppointmentSchema = Joi.object({
     status: Joi.string().valid('pending', 'confirmed', 'canceled').required()
   });
   
-  // Update Appointment Status API
   router.patch('/update', authenticate, async (req, res) => {
     const { error } = updateAppointmentSchema.validate(req.body);
     if (error) return res.status(400).send({ error: error.details[0].message });

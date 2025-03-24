@@ -28,6 +28,8 @@
     "helmet": "^8.0.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.15.0",
+    "mongodb-shell": "^1.0.1",
     "mongoose": "^8.12.1"
   },
   "devDependencies": {
